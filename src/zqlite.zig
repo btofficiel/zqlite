@@ -4,7 +4,9 @@ const utils = struct {
 };
 
 pub fn main() !void {
-    const inputBuffer = try utils.newInputBuffer();
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var allocator = gpa.allocator();
+    const inputBuffer = try utils.newInputBuffer(&allocator);
     const declaration = "ZQLite - A minimal SQLite implentation in Zig\n";
     try utils.printOutput(declaration);
     while (true) {
