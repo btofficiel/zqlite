@@ -1,10 +1,9 @@
 const std = @import("std");
+const Allocator = std.mem.Allocator;
 
 pub const InputBuffer = struct { input: ?[]u8 = null, input_length: usize = 0, buffer_length: usize = 1024 };
 
-pub fn newInputBuffer() !*InputBuffer {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
+pub fn newInputBuffer(allocator: *Allocator) !*InputBuffer {
     const instance = try allocator.create(InputBuffer);
     return instance;
 }
