@@ -1,13 +1,8 @@
 const std = @import("std");
+const Allocator = std.mem.Allocator;
 const token = @import("./token.zig");
 
-pub fn tokenize(input: []const u8) ![]token.Token {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = gpa.allocator();
-    defer {
-        _ = gpa.deinit();
-    }
-
+pub fn tokenize(allocator: *Allocator, input: []const u8) ![]token.Token {
     var tokens = try allocator.alloc(token.Token, 1024);
 
     var token_count: usize = 0;
@@ -17,7 +12,6 @@ pub fn tokenize(input: []const u8) ![]token.Token {
     var word_index: usize = 0;
 
     for (input) |char| {
-        std.debug.print("reading {any}\n", .{char});
         if (char == ' ' or char == '\n') {
             if (word_index > 0) {
                 std.debug.print("encountered end\n", .{});
