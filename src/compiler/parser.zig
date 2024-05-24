@@ -1,10 +1,10 @@
 const std = @import("std");
 const Allocator = std.mem.Allocator;
 const token = @import("./token.zig");
+const InputBuffer = @import("../utils/repl.zig").InputBuffer;
 
 pub fn tokenize(allocator: *Allocator, input: []const u8) ![]token.Token {
     var tokens = try allocator.alloc(token.Token, 1024);
-
     var token_count: usize = 0;
     var current_read_word = try allocator.alloc(u8, 1024);
     defer allocator.free(current_read_word);
@@ -34,6 +34,5 @@ pub fn tokenize(allocator: *Allocator, input: []const u8) ![]token.Token {
     }
 
     std.debug.print("current read word: {s}\n", .{current_read_word[0..word_index]});
-
     return tokens[0..token_count];
 }

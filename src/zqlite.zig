@@ -9,6 +9,7 @@ const compiler = struct {
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
     var allocator = gpa.allocator();
+    defer (std.debug.print("Memory leak", .{}));
     const inputBuffer = try utils.newInputBuffer(&allocator);
     const declaration = "ZQLite - A minimal SQLite implentation in Zig\n";
     try utils.printOutput(declaration);
@@ -17,9 +18,9 @@ pub fn main() !void {
         try utils.printOutput(prompt);
         try utils.readInput(inputBuffer);
         if (inputBuffer.input) |input| {
-            const tokens = try compiler.tokenize(&allocator, "SELECT");
+            const tokens = try compiler.tokenize(&allocator, input);
             std.debug.print("tokens {any}", .{tokens});
-            if (std.mem.eql(u8, input, ".exit")) {
+            if (std.mem.eql(u8, input[0..inputBuffer.input_length], ".exit")) {
                 std.process.exit(0);
             } else {
                 std.debug.print("Unrecognised command \n", .{});

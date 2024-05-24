@@ -5,6 +5,8 @@ pub const InputBuffer = struct { input: ?[]u8 = null, input_length: usize = 0, b
 
 pub fn newInputBuffer(allocator: *Allocator) !*InputBuffer {
     const instance = try allocator.create(InputBuffer);
+    instance.* = InputBuffer{};
+    instance.input = try allocator.alloc(u8, 100);
     return instance;
 }
 
@@ -23,7 +25,8 @@ pub fn readInput(inputBuffer: *InputBuffer) !void {
     var buf: [1024]u8 = undefined;
     const input = try reader.readUntilDelimiterOrEof(&buf, '\n');
     if (input) |line| {
-        inputBuffer.input = line;
+        std.mem.copyForwards(u8, inputBuffer.input.?, line);
+        inputBuffer.input_length = line.len;
     } else {
         std.debug.print("Error occured while taking input", .{});
         std.process.exit(1);
