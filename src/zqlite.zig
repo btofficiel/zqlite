@@ -18,7 +18,7 @@ pub fn main() !void {
         try utils.printOutput(prompt);
         try utils.readInput(inputBuffer);
         if (inputBuffer.input) |input| {
-            const tokens = try compiler.tokenize(&allocator, input);
+            const tokens = try compiler.tokenize(&allocator, input[0..inputBuffer.input_length]);
             std.debug.print("tokens {any}", .{tokens});
             if (std.mem.eql(u8, input[0..inputBuffer.input_length], ".exit")) {
                 std.process.exit(0);
